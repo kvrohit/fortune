@@ -1,15 +1,23 @@
 use rand::seq::IteratorRandom;
-use std::io::{Result, Seek, SeekFrom, BufReader, BufRead};
-use std::fs::{File, metadata, read_dir};
 use rand::Rng;
+use std::fs::{metadata, read_dir, File};
+use std::io::{BufRead, BufReader, Result, Seek, SeekFrom};
 
 fn get_random_fortune_file() -> String {
-    let path = "/Users/rohit/play/rust-apps/fortune/src/datfiles";
-    let entries = read_dir(path).unwrap()
+    let path = "src/datfiles";
+    let entries = read_dir(path)
+        .unwrap()
         .map(|result| result.map(|e| e.path()))
-        .collect::<Result<Vec<_>>>().unwrap();
+        .collect::<Result<Vec<_>>>()
+        .unwrap();
     let mut rng = rand::thread_rng();
-    entries.iter().choose(&mut rng).unwrap().to_str().unwrap().to_string()
+    entries
+        .iter()
+        .choose(&mut rng)
+        .unwrap()
+        .to_str()
+        .unwrap()
+        .to_string()
 }
 
 fn get_fortune() -> String {
@@ -28,11 +36,11 @@ fn get_fortune() -> String {
         Ok(0) => {
             random_byte = 0;
             0
-        },
+        }
         Ok(size) => {
             random_byte += size as u64 + 1;
             size
-        },
+        }
         Err(_) => {
             random_byte = 0;
             0
